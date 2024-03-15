@@ -1,16 +1,18 @@
 import tensorflow as tf
-from tensorflow.keras.applications.inception_v3 import preprocess_input
-from tensorflow.keras import backend, layers, metrics
+
+from keras.applications.inception_v3 import preprocess_input
+from keras import backend, layers, metrics
 
 
-from tensorflow.keras.applications import Xception
-from tensorflow.keras.models import Model, Sequential
-from keras.layers import Dropout
+from keras.applications import Xception
+from keras.models import Model, Sequential
+
 
 
 
 def image_embedder(input_shape):
-    """ Returns the convolutional neural network that will generate the encodings of each picture """
+    "this function creates a CNN that will be used to generate embeddings of the images"
+    "the layers until the 27th layer will be frozen"
 
     pretrained_model = Xception(
         input_shape=input_shape,
@@ -18,7 +20,6 @@ def image_embedder(input_shape):
         include_top=False,
         pooling='avg',
     )
-
     for i in range(len(pretrained_model.layers)-27):
         pretrained_model.layers[i].trainable = False
 
@@ -34,15 +35,15 @@ def image_embedder(input_shape):
 
 
 
-def get_siamese_network(input_shape=(224, 224, 3)):
+def get_siamese_network(input_shape):
     encoder = image_embedder(input_shape)
 
-    # Input Layers for the images
+    # Define the input layers of the model for the inputs
     anchor_input = layers.Input(input_shape, name="Anchor_Input")
     positive_input = layers.Input(input_shape, name="Positive_Input")
     negative_input = layers.Input(input_shape, name="Negative_Input")
 
-    ## Generate the encodings (feature vectors) for the images)
+    # Here the embeddings will be generated
     encoded_a = encoder(anchor_input)
     encoded_p = encoder(positive_input)
     encoded_n = encoder(negative_input)
