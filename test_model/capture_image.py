@@ -25,14 +25,21 @@ while True:
         #if you press space
         img_name= f"test_image_new{img_counter}.jpg"
         img = cv2.imwrite(img_name, frame)
-        image_path = directory_path + f"test_image_new{img_counter}.jpg"
-        print(image_path)
+
         print(f"image {img_name}was saved")
         img_counter+= 1
 cam.release()
 cv2.destroyAllWindows()
-print(img)
+image_path = os.path.join(directory_path, img_name)
+print(image_path)
+
 def crop_image(image_path):
+    """
+
+    :param image_path: Path to the image
+    :return: tuple containing a boolean indicating successful detection and the cropped
+    image if successful otherwise (False, None)
+    """
     detector = MTCNN()
     img = cv2.imread(image_path)
     data = detector.detect_faces(img)
@@ -59,4 +66,5 @@ if x==1 :
     print("image was accepted")
     cv2.imwrite("test_image_new.jpg", img)
 else:
+
     print('image was not accepted')

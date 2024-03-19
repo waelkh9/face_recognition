@@ -3,8 +3,15 @@ import os
 import shutil
 
 
-def Read_Two_Column_File(file_name):
-    with open(file_name, 'r') as f_input:
+def Read_Two_Column_File(file_path):
+    """
+
+    :param file_path: This is the file path
+    :return: Two lists containing the labels and the filenames corresponding to each label.
+    Y is the labels
+    X is the filenames
+    """
+    with open(file_path, 'r') as f_input:
         csv_input = csv.reader(f_input, delimiter=' ', skipinitialspace=True)
         x = []
         y = []
@@ -16,8 +23,8 @@ def Read_Two_Column_File(file_name):
 
 x, y = Read_Two_Column_File(r'/home/khlifi/Downloads/identity_CelebA.txt')
 
-path = r'/home/khlifi/Documents/newdat'
-src_folder = r"/home/khlifi/Documents/datasets"
+path = 'destination path'
+src_folder = 'source folder path'
 for i in range(len(x)):
     b=0
     for j in range(len(x)):

@@ -8,6 +8,11 @@ from keras.applications import Xception
 from keras.models import Model, Sequential
 #os.chdir(r"C:\Users\waelk\PycharmProjects\facial_recognition\facial_recognition\test_model\model\encoder.keras")
 def image_embedder(input_shape):
+  """
+
+  :param input_shape: take the input shape which the CNN will expect
+  :return: The convolutional neural network that will be used in embedding.
+  """
   """ Returns the convolutional neural network that will generate the encodings of each picture """
 
   pretrained_model = Xception(

@@ -13,26 +13,34 @@ from pathlib import Path
 
 
 from sklearn.metrics import accuracy_score, confusion_matrix,ConfusionMatrixDisplay
-#from sklearn.metrics.ConfusionMatrixDisplay import plot_confusion_matrix
+
 
 directory_path = os.getcwd()
 Path = os.path.join(directory_path, 'Extracted Faces')
 print(Path)
-#Path = r'C:\Users\waelk\PycharmProjects\facial_recognition\facial_recognition\Dataset_tools\Extracted Faces'
-#Path =r'G:\datasets\new_dat'
 random.seed(5)
 np.random.seed(5)
 tf.random.set_seed(5)
 folders = os.listdir(Path)
 
 def read_imagee(index):
+    """
+
+    :param index: takes the  index of an image list .
+    :return:a 3D tensor of the following shape will be returned [height, width, channels]
+    """
 
     image_path = os.path.join(Path, index[0], index[1])
     image_string = tf.io.read_file(image_path)
     image = tf.image.decode_jpeg(image_string, channels=3)
     image = tf.image.convert_image_dtype(image, tf.float32)
-    #image = tf.image.resize(image, (224,224))
+    image = tf.image.resize(image, (224,224))
 def read_image(index):
+    """
+
+    :param index: takes the index to an image that contains the filename and path.
+    :return: a 3D tensor of the following shape will be returned [height, width, channels]
+    """
 
     path = os.path.join(Path, index[0], index[1])
     image = cv2.imread(path, cv2.COLOR_BGR2RGB)
@@ -52,6 +60,13 @@ test_triplet = create_triplets(Path, test_list, max_files=2)
 print(f'this is the Triplet list  {test_triplet}')
 
 def batch_generator(triplet_list, batch_size=256, preprocessing = False):
+    """
+
+    :param triplet_list: this is list containing the tripelets
+    :param batch_size: size of the image batch
+    :param preprocessing: specifies if any preprocessing is applied
+    :return: returns a batch of images (images are in numpy array form).
+    """
     batch_step = len(triplet_list)//batch_size
 
     for i in range(batch_step+1):
@@ -76,6 +91,11 @@ def batch_generator(triplet_list, batch_size=256, preprocessing = False):
 
         yield ([anchor, positive, negative])
 def data_generator(triplet_list):
+    """
+
+    :param triplet_list: list of triplets in the following form (anchor, positive, negative)
+    :return: returns a tuple containing the images that are in numpy array form.
+    """
     batch_step = len(triplet_list)
     anchor = []
     positive = []
@@ -97,12 +117,20 @@ def data_generator(triplet_list):
 
 encoder = image_embedder((224,224,3))
 
-encoder.load_weights(r'C:\Users\waelk\PycharmProjects\facial_recognition\facial_recognition\test_model\model\encoder.keras')
+encoder.load_weights(os.path.join('model', 'encoder.keras'))
 
 
 
 
 def classify_images(face_list1, face_list2, threshold=1.2):
+    """
+
+    :param face_list1: This is a list of images can be anchor, positive or negative
+    :param face_list2: this is a list of images, can be anchor , positive or negative
+    :param threshold: A value for the euclidean distance that determines if two images
+    belong to the same class.
+    :return:
+    """
     # Getting the encodings for the passed faces
     embeddings1 = encoder.predict(face_list1)
     embeddings2 = encoder.predict(face_list2)
@@ -113,6 +141,12 @@ def classify_images(face_list1, face_list2, threshold=1.2):
 
 
 def ModelMetrics(pos_list, neg_list):
+    """
+
+    :param pos_list: Takes a list containing the predictions of the model on anchor and positive samples
+    :param neg_list:Takes a list containing the predictions of the model on anchor and negative samples
+    :return: a confusion matrix
+    """
     true = np.array([0] * len(pos_list) + [1] * len(neg_list))
     pred = np.append(pos_list, neg_list)
 

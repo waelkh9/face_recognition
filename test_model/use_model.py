@@ -14,10 +14,11 @@ from facial_recognition.Siamese_model import image_embedder, get_siamese_network
 
 directory_path = os.getcwd()
 database_path = os.path.join(directory_path, 'database')
+encoder_path = os.path.join(directory_path, 'encoder.keras')
 
-#parser = argparse.ArgumentParser(description='gives filename')
-#parser.add_argument('file_name', metavar='file_name', type=str, help='gives filename')
-#args = parser.parse_args()
+parser = argparse.ArgumentParser(description='gives filename')
+parser.add_argument('file_name', metavar='file_name', type=str, help='gives filename')
+args = parser.parse_args()
 
 
 def read_image(Path):
@@ -33,8 +34,15 @@ def read_image(Path):
 
 encoder = image_embedder((224,224,3))
 
-encoder.load_weights(r'C:\Users\waelk\PycharmProjects\facial_recognition\facial_recognition\test_model\model\encoder.keras')
+encoder.load_weights(encoder_path)
 def classify_images(face_list1, face_list2, threshold=1.3):
+    """
+
+    :param face_list1:
+    :param face_list2:
+    :param threshold:
+    :return:
+    """
     # Getting the encodings for the passed faces
     tensor1 = encoder.predict(face_list1)
     tensor2 = encoder.predict(face_list2)
@@ -45,8 +53,8 @@ def classify_images(face_list1, face_list2, threshold=1.3):
         return 1
     else:
         return 0
-#file_name = args.file_name
-test_path = os.path.join(directory_path, 'test_image_2.jpg')
+file_name = args.file_name
+test_path = os.path.join(directory_path, file_name)
 img1 = np.array([read_image(Path=test_path)])
 result = {}
 for persons in os.listdir(database_path):

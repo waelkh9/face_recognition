@@ -5,6 +5,14 @@ from keras.applications.inception_v3 import preprocess_input
 import random
 
 def get_image(image_path, preprocessing=False, resize=False, shape= (224,224,3)):
+    """
+
+    :param image_path: Path to the image file
+    :param preprocessing: if it's set to true, preprocessing will be performed, it's by default false
+    :param resize: Set to true if resizing is needed
+    :param shape: Image size for resizing
+    :return: the 3d tensor containing the image information
+    """
 
     image_string = tf.io.read_file(image_path)
     image = tf.image.decode_jpeg(image_string, channels=3)
@@ -20,6 +28,12 @@ def preprocess_images(anchor_img, positive_img, negative_img):
 
 
 def split_dataset(directory, split=0.9):
+    """
+
+    :param directory: Path to the directory containing the dataset
+    :param split: The percentage of data that will be used in training.
+    :return: returns two dictionaries in the following shape : {'label', 'number of images corresponding to that label}
+    """
     all_files = os.listdir(directory)
     len_train = int(len(all_files) * split)
     random.shuffle(all_files)
@@ -47,7 +61,15 @@ def split_dataset(directory, split=0.9):
     return train_list, test_list
 
 def create_triplets(directory, folder_list, max_files=20):
-    "Create triplets from the generated dataset lists."
+    """
+
+    :param directory: Path to the directory of the dataset
+    :param folder_list: this is the dictionary given by the 'split dataset function'
+    :param max_files: maximum number of files that can be used for triplet creation from each label
+    :return: list of tuples, each tuple containing 3 tuples (anchor, positive, negative).
+    Tuples are in the following form : ('label', 'filename')
+    """
+    "Creates triplets from the generated dataset lists."
     triplets = []
     list_folders = list(folder_list.keys())
 
@@ -73,6 +95,12 @@ def create_triplets(directory, folder_list, max_files=20):
     return triplets
 
 def Generate_dataset(list, Path):
+    """
+
+    :param list: This is the triplet list
+    :param Path: Path to the dataset
+    :return: returns a tensorflow dataset of images.
+    """
     "this function will create a tf dataset "
     anchor_label = []
     positive_label = []

@@ -11,8 +11,14 @@ from keras.models import Model, Sequential
 
 
 def image_embedder(input_shape):
+    """
+
+    :param input_shape: Shape of th expected input
+    :return: the encoder
+    """
     "this function creates a CNN that will be used to generate embeddings of the images"
     "the layers until the 27th layer will be frozen"
+
 
     pretrained_model = Xception(
         input_shape=input_shape,
@@ -36,6 +42,11 @@ def image_embedder(input_shape):
 
 
 def get_siamese_network(input_shape):
+    """
+
+    :param input_shape: shape of the input expected by the network
+    :return: the encoder and the siamse network.
+    """
     encoder = image_embedder(input_shape)
 
     # Define the input layers of the model for the inputs

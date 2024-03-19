@@ -28,6 +28,11 @@ database_path = os.path.join(directory_path, 'database')
 
 
 def read_image(Path):
+    """
+
+    :param Path: Path to the image that will be read.
+    :return: Returns a 3D tensor containing the image data in the following shape [widht,height,channels].
+    """
 
 
     image = cv2.imread(Path, cv2.COLOR_BGR2RGB)
@@ -93,6 +98,13 @@ output_data2 = interpreter.get_tensor(output_details[0]['index'])
 print(output_data2)
 print(output_data)
 def classify_images(face_list1, face_list2, threshold=1.2):
+    """
+
+    :param face_list1: a list of labeled imgaes
+    :param face_list2:
+    :param threshold:
+    :return:
+    """
     # Getting the encodings for the passed faces
 
     tensor1 = interpreter.set_tensor(input_details[0]['index'], [face_list1])

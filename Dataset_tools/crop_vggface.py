@@ -1,10 +1,13 @@
 from mtcnn import MTCNN
 import cv2
-#import matplotlib.pyplot as plt
-#from matplotlib.pyplot import imshow
 import os
-import shutil
 def crop_image(image_path):
+    """
+
+    :param image_path: Path to the input image
+    :return: tuple containing a boolean indicating successful detection and the cropped
+    image if successful otherwise (False, None)
+    """
     detector = MTCNN()
     img=cv2.imread(image_path)
     data=detector.detect_faces(img)
@@ -12,23 +15,25 @@ def crop_image(image_path):
     if data !=[]:
         for faces in data:
             box=faces['box']
-            # calculate the area in the image
+            # calculate the area of the bounding box in the image
             area = box[3] * box[2]
+            #Checks if the current detected face is the largest
             if area>biggest:
                 biggest=area
-                bbox=box
-        bbox[0]= 0 if bbox[0]<0 else bbox[0]
-        bbox[1]= 0 if bbox[1]<0 else bbox[1]
-        img =img[bbox[1]: bbox[1]+bbox[3],bbox[0]: bbox[0]+ bbox[2]]
-        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB) # convert from bgr to rgb
-        return (True, img)
+                bounding_box=box
+        # Ensure bounding box coordinates are non-negative
+        bounding_box[0]= 0 if bounding_box[0]<0 else bounding_box[0]
+        bounding_box[1]= 0 if bounding_box[1]<0 else bounding_box[1]
+        #crop  the face region from the imgae
+        cropped_img =img[bounding_box[1]: bounding_box[1]+bounding_box[3],bounding_box[0]: bounding_box[0]+ bounding_box[2]]
+        cropped_face = cv2.cvtColor(cropped_img, cv2.COLOR_BGR2RGB) # convert from bgr to rgb
+        return (True, cropped_face)
     else:
         return (False, None)
-#path = r"G:\datasets\celeb-A\img_align_celeba\000060.jpg"
-Path2 = r"/home/khlifi/Documents/vgg_face/train"
-dst_path = r"/home/khlifi/Documents/vggface_cropped"
+
+Path2 = 'replace with source directory'
+dst_path = 'replace with destination directory'
 all_folders = os.listdir(Path2)
-print(len(all_folders))
 result = False
 
 for folders in all_folders:
