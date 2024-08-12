@@ -6,7 +6,6 @@ from keras import backend, layers, metrics
 
 from keras.applications import Xception
 from keras.models import Model, Sequential
-#os.chdir(r"C:\Users\waelk\PycharmProjects\facial_recognition\facial_recognition\test_model\model\encoder.keras")
 def image_embedder(input_shape):
   """
 
